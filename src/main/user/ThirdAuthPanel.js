@@ -16,10 +16,10 @@ class ThirdAuthPanel extends Component {
     render() {
         return (
             <ul className="form-group list-inline list-mr-4">
-                <WechatButton/>
+                <WechatButton />
                 <WeiboButton appKey="1425911063"/>
                 <LinedInButton/>
-                <GithubButton/>
+                <GithubButton clientId="70aa74f28e9cdbdf98bf" redirectUri="http://app.glad.so/callback"/>
             </ul>
         );
     }

@@ -23,7 +23,7 @@ class WeiboButton extends Component {
             let script = document.createElement('script');
             script.setAttribute("type", "text/javascript");
             html.appendChild(script);
-            script.innerHTML = 'document.getElementsByClassName("icon-link round weibo fill")[0].onclick = () => {WB2.login(function(){console.info("Logged weibo in")})}';
+            script.innerHTML = 'document.getElementsByClassName("icon-link round weibo fill")[0].onclick = () => {WB2.login(function(r){console.info(r)})}';
             html.removeChild(script);
             return html;
         };
@@ -32,7 +32,7 @@ class WeiboButton extends Component {
             if(html.weibo) {
                 return;
             }
-            let scriptUrl = "http://tjs.sjs.sinajs.cn/open/api/js/wb.js?appkey=" + this.props.appKey;
+            let scriptUrl = "//tjs.sjs.sinajs.cn/open/api/js/wb.js?appkey=" + this.props.appKey;
             let script = document.createElement("script");
             script.setAttribute("id", "weibojs");
             script.setAttribute("type", "text/javascript");
@@ -62,7 +62,7 @@ class WeiboButton extends Component {
         this.prepare();
         return (
             <li className="list-inline-item">
-                <a id="weiboButton" href="#" role="button" className="icon-link round weibo fill">
+                <a href="#" role="button" className="icon-link round weibo fill">
                     <i className="fa fa-weibo"></i>
                 </a>
             </li>

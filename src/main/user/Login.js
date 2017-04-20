@@ -19,8 +19,26 @@ Pace.start({
 
 class Login extends Component {
 
+    constructor() {
+        super();
+        this.state = this.initialState();
+    }
+
+    check() {
+        if(this.props.match.params.provider) {
+            location.search;
+            location.hash;
+
+            "request.api.logionvia('provider', code)"
+        }
+    }
+
+    initialState() {
+        return {submitted: true};
+    }
+
     submit() {
-        alert('Ajax to server');
+        this.setState({submitted: !this.state.submitted});
     }
 
     render() {
@@ -50,7 +68,7 @@ class Login extends Component {
                 </div>
                 <div className="form-group row">
                     <div className="col-12">
-                        <button type="submit" className="btn btn-inverse btn-rounded btn-block" onClick={this.submit}>Sign in</button>
+                        <button type="submit" className="btn btn-inverse btn-rounded btn-block" onClick={() => this.submit()}>Sign in</button>
                     </div>
                 </div>
                 <hr className="form-group"/>

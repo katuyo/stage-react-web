@@ -6,7 +6,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Router from './main/context/Router';
+import Router from './main/context/Dispatcher';
 
 import './index.css';
 

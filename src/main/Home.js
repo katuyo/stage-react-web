@@ -3,20 +3,17 @@
  * @since 2017/4/17.
  */
 
-import React, { Component } from 'react';
+import React from 'react';
 
 import logo from './context/logo.svg';
 
 import './Home.css';
 
-class Home extends Component {
-  render() {
-    return (
+const Home = ({time}) =>
         <div>
-          <image src={logo}></image>
-        </div>
-    );
-  }
-}
+            <span>{time}</span>
+            <image src={logo}/>
+        </div>;
+
 
 export default Home;

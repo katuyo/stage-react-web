@@ -1,32 +1,49 @@
 /**
  * @author palmtale
- * @since 2017/4/18.
+ * @since 2017/4/17.
  */
 
-import React, { Component } from 'react';
+
+import React from 'react'
+import {
+    BrowserRouter,
+    Route,
+    matchPath
+} from 'react-router-dom';
 import Pace from "pace-progress/pace.min";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'pace-progress/themes/blue/pace-theme-flash.css';
 
+
+import Home from '../Home';
+import Login from '../user/Login';
+import Authenticator from './Authenticator';
+import UserRequiredRoute from "./UserRequiredRoute";
+import Detail from "../item/Detail";
+
 Pace.start({
     document: false
 });
 
-class Dispatcher extends Component {
+const Container = ({children}) => {
+    let className = "";
+    let component = this;
+    React.Children.map(children, function (route) {
+        if(matchPath(location.pathname, route.props)) {
+            className = route.props.className;
+            component = route;
+        }
+    });
+    return (<div className={className}>{component}</div>);
+};
 
-    render() {
-        let className = "";
-        let component = this;
-        React.Children.map(this.props.children, function (route) {
-            if(location.pathname === route.props.path) {
-                document.title = route.props.title;
-                className = route.props.className;
-                component = route;
-            }
-        });
-        return (<div className={className}>{component}</div>);
-    }
-}
-
-export default Dispatcher;
+export default () => (
+    <BrowserRouter>
+        <Container>
+            <Route expect path="/" component={Home} />
+            <Authenticator path="/login/:provider" component={Login} from="/" className="page-container"/>
+            <UserRequiredRoute path="/item" component={Detail} />
+        </Container>
+    </BrowserRouter>
+);
