@@ -29,12 +29,14 @@ Pace.start({
 const Container = ({children}) => {
     let className = "";
     let component = this;
+
     React.Children.map(children, function (route) {
         if(matchPath(location.pathname, route.props)) {
             className = route.props.className;
             component = route;
         }
     });
+
     return (<div className={className}>{component}</div>);
 };
 
@@ -42,7 +44,8 @@ export default () => (
     <BrowserRouter>
         <Container>
             <Route expect path="/" component={Home} />
-            <Authenticator path="/login/:provider" component={Login} from="/" className="page-container"/>
+            <Route path="/login" component={Login} className="page-container" />
+            <Authenticator path="/login/:provider" component={Login} className="page-container" />
             <UserRequiredRoute path="/item" component={Detail} />
         </Container>
     </BrowserRouter>

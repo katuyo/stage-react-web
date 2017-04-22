@@ -8,10 +8,13 @@ import React, { Component } from 'react';
 import './Detail.css';
 
 class ItemDetail extends Component {
-    render() {
+
+    render = () => {
+        const {user} = this.props;
         return (
             <div className="ItemDetail">
-
+                {user.username}/
+                {user.alias}
             </div>
         );
     }

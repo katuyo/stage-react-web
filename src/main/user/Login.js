@@ -4,55 +4,69 @@
  */
 
 import React, { Component } from 'react';
-import Pace from "pace-progress/pace.min";
+import axios from 'axios';
 
 import ThirdAuthPanel from "./ThirdAuthPanel";
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'pace-progress/themes/blue/pace-theme-flash.css';
 import './Login.css';
 import banner from '../context/logo-dark.png';
 
-Pace.start({
-    document: false
-});
-
 class Login extends Component {
 
-    constructor() {
-        super();
-        this.state = this.initialState();
-    }
+    login = () => {
+        let username = document.getElementById('username').value;
+        let password = document.getElementById('password').value;
 
-    check() {
-        if(this.props.match.params.provider) {
-            location.search;
-            location.hash;
-
-            "request.api.logionvia('provider', code)"
+        if(!username || !password) {
+            //TODO Input Validator required, error prompt.
+            return ;
         }
-    }
+        let headers = {'X-Requested-With': 'XMLHttpRequest'};
+        // 1st then csrf token
+        //TODO Get csrf token, would be better rendered from server.
+        axios.get('/oauth/token')
+            .then(r => {
+                for (const [k, v] of Object.entries(r.headers)) {
+                    if(k.indexOf('set-')===0) {
+                        headers[k.substring(4)] += (v+';') ;
+                    }
+                }
+                headers['X-CSRF-TOKEN'] = r.data;
+                return axios.post('/oauth/token',
+                    {grant_type: 'password', client_id: '10000004', client_secret: 'Qxcnjb7dLoELoJ628f3Omc76OyXiZAjsDNJ2EyYy',
+                        username: username, password: password, scope: '*'},
+                    {headers: headers})
+            }).then(r => {
+                //TODO set accessToken as the temp app_token
+                document.cookie= ('Authorization=' + r.data.token_type + ' ' + r.data.access_token);
+                return this.props.callback(true);
+                //TODO check if set-cookie 'app_token' there, if so else false.
+                for (const [k, v] of Object.entries(r.headers)) {
+                    if(k.indexOf('set-cookie') === 0 ) {
+                        for(const cookie of v){
+                            if(cookie.indexOf(this.props.sessionKey || 'app_token=') === 0) {
+                                return this.props.callback(true);
+                            }
+                        }
+                    }
+                }
+                return this.props.callback(false);
+            }).catch(e => {
+                return this.props.callback(false);
+            });
+    };
 
-    initialState() {
-        return {submitted: true};
-    }
-
-    submit() {
-        this.setState({submitted: !this.state.submitted});
-    }
-
-    render() {
-        return (
-            <div className="page-content">
+    render = () =>
+         (<div className="page-content">
                 <img src={banner} alt="" width="160" className="mb-10"/>
                 <div className="form-group row">
                     <div className="col-12">
-                        <input type="text" placeholder="Username" className="form-control" />
+                        <input type="text" placeholder="Username" className="form-control" id="username" />
                     </div>
                 </div>
                 <div className="form-group row">
                     <div className="col-12">
-                        <input type="password" placeholder="Password" className="form-control" />
+                        <input type="password" placeholder="Password" className="form-control" id="password" />
                     </div>
                 </div>
                 <div className="form-group row">
@@ -68,15 +82,13 @@ class Login extends Component {
                 </div>
                 <div className="form-group row">
                     <div className="col-12">
-                        <button type="submit" className="btn btn-inverse btn-rounded btn-block" onClick={() => this.submit()}>Sign in</button>
+                        <button type="submit" className="btn btn-inverse btn-rounded btn-block" onClick={this.login}>Sign in</button>
                     </div>
                 </div>
                 <hr className="form-group"/>
                 <ThirdAuthPanel className="form-group row"/>
                 <hr className="form-group"/>
-            </div>
-        );
-    }
+            </div>);
 }
 
 export default Login;
